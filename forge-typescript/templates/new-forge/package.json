@@ -1,0 +1,31 @@
+{
+  "name": "{{forgeName}}",
+  "description": "{{description}}",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "clear": "rm -rf dist",
+    "build": "tsc && tsc-alias",
+    "watch": "nodemon --watch scripts --ext * --exec npm run build"
+  },
+  "keywords": [],
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "nodemon": "^3.1.9",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.8.3"
+  },
+  "forge": {
+    "name": "{{forgeName}}",
+    "description": "Scaffolds files and folders based on customizable tasks",
+    "{{defaultTask}}": {
+      "name": "{{defaultTask}}",
+      "description": "Creates a new folder and injects the template files",
+      "default": true
+    }
+  }
+}

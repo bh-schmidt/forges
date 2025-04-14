@@ -1,0 +1,35 @@
+{
+  "name": "forge-typescript",
+  "description": "This forge helps you scaffold other forges using TypeScript.",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "clear": "rm -rf dist",
+    "build": "tsc && tsc-alias",
+    "watch": "nodemon --watch scripts --ext * --exec npm run build"
+  },
+  "keywords": [],
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "nodemon": "^3.1.9",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.8.3"
+  },
+  "forge": {
+    "name": "Forge Typescript",
+    "description": "Builds other TypeScript-based forges",
+    "new-forge": {
+      "name": "New Forge",
+      "description": "Creates a new forge",
+      "default": true
+    },
+    "new-task": {
+      "name": "New Task",
+      "description": "Creates a new task in the current forge"
+    }
+  }
+}
