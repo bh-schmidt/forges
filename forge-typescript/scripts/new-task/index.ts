@@ -1,4 +1,4 @@
-import { createForge } from 'file-forge'
+import { createForge } from 'hyper-forge'
 
 export default createForge()
     .configureCommands(program => {
@@ -13,8 +13,8 @@ export default createForge()
             return true
         }
     })
-    .on('prompt', async ff => {
-        await ff.prompts.promptWithConfirmation([
+    .on('prompt', async hf => {
+        await hf.prompts.promptWithConfirmation([
             {
                 name: 'taskName',
                 type: 'text',
@@ -37,13 +37,13 @@ export default createForge()
             },
         ])
     })
-    .on('write', async ff => {
-        await ff.memFs.inject('**/*')
+    .on('write', async hf => {
+        await hf.memFs.inject('**/*')
     })
-    .on('commit', async ff => {
-        if (ff.variables.get('buildForge')) {
-            await ff.program.runCommand('npm run build')
+    .on('commit', async hf => {
+        if (hf.variables.get('buildForge')) {
+            await hf.program.runCommand('npm run build')
         }
 
-        await ff.config.save()
+        await hf.config.save()
     })

@@ -1,4 +1,4 @@
-import { createForge } from 'file-forge'
+import { createForge } from 'hyper-forge'
 
 export default createForge()
     .configureCommands(program => {
@@ -21,8 +21,8 @@ export default createForge()
             return true
         }
     })
-    .on('prompt', async ff => {
-        await ff.prompts.promptWithConfirmation([
+    .on('prompt', async hf => {
+        await hf.prompts.promptWithConfirmation([
             {
                 name: 'projectName',
                 type: 'text',
@@ -56,13 +56,13 @@ export default createForge()
             },
         ])
 
-        const targetDir = ff.variables.get('targetDir') ?? ff.variables.get('projectName')
-        ff.paths.setTargetDir(targetDir)
+        const targetDir = hf.variables.get('targetDir') ?? hf.variables.get('projectName')
+        hf.paths.setTargetDir(targetDir)
     })
-    .on('write', async ff => {
-        await ff.memFs.inject('**/*')
+    .on('write', async hf => {
+        await hf.memFs.inject('**/*')
     })
-    .on('commit', async ff => {
+    .on('commit', async hf => {
         // Saving the config even if empty is a good practice to help other tasks identify the root of the project.
-        await ff.config.save()
+        await hf.config.save()
     })

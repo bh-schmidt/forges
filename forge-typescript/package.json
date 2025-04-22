@@ -31,5 +31,8 @@
       "name": "New Task",
       "description": "Creates a new task in the current forge"
     }
+  },
+  "dependencies": {
+    "hyper-forge": "^0.1.2"
   }
 }

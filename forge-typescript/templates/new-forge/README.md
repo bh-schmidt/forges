@@ -5,9 +5,9 @@
 ## Dependencies
 
 * [Node.js](https://nodejs.org/) — Required to run and build the forge. Recommended version: `>=18`.
-* [file-forge-cli](https://www.npmjs.com/package/file-forge-cli) — The CLI tool used to run forges. Install it globally with:
+* [hyper-forge-cli](https://www.npmjs.com/package/hyper-forge-cli) — The CLI tool used to run forges. Install it globally with:
 ```console
-npm install -g file-forge-cli
+npm install -g hyper-forge-cli
 ```
 
 ### Optional / Recommended
@@ -28,7 +28,7 @@ npm install -g file-forge-cli
 
 1. Open your terminal.
 2. Navigate to the directory where you want to create your new forge (e.g., `C:\\my-forges`).
-3. Run the File Forge CLI by typing `ff`.
+3. Run the Hyper Forge CLI by typing `hf`.
 4. Choose `Run a forge` from the options.
 5. Select this forge by name.
 6. Pick the task you want to run.

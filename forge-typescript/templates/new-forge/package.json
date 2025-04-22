@@ -13,6 +13,9 @@
     "dist",
     "templates"
   ],
+  "dependencies": {
+    "hyper-forge": "0.x"
+  },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "nodemon": "^3.1.9",

@@ -1,4 +1,4 @@
-import { createForge } from 'file-forge'
+import { createForge, HyperForgeData } from 'hyper-forge'
 
 export default createForge()
     .configureCommands(program => {
@@ -21,8 +21,8 @@ export default createForge()
             return true
         }
     })
-    .on('prompt', async ff => {
-        await ff.prompts.promptWithConfirmation([
+    .on('prompt', async hf => {
+        await hf.prompts.promptWithConfirmation([
             {
                 name: 'forgeName',
                 type: 'text',
@@ -77,27 +77,41 @@ export default createForge()
                 message: 'Set the description of your forge'
             },
             {
-                name: 'autoLink',
+                name: 'autoInstall',
                 type: 'toggle',
-                message: 'Automatically install the template? (npm link)',
+                message: 'Automatically install the forge?',
                 initial: true,
                 active: 'yes',
                 inactive: 'no'
+            },
+            {
+                name: 'rebuildStrategy',
+                type: (_, values) => values.autoInstall ? 'select' : false,
+                message: 'Which is the rebuild strategy to use?',
+                choices: HyperForgeData.rebuildStrategies.map(e => ({ title: e, value: e }))
             }
         ])
 
-        const targetDir = ff.variables.get('targetDir') ?? ff.variables.get('forgeName')
-        ff.paths.setTargetDir(targetDir)
+        const targetDir = hf.variables.get('targetDir') ?? hf.variables.get('forgeName')
+        hf.paths.setTargetDir(targetDir)
     })
-    .on('write', async ff => {
-        await ff.memFs.inject('**/*')
+    .on('write', async hf => {
+        await hf.memFs.inject('**/*')
     })
-    .on('commit', async ff => {
-        await ff.program.runCommand('npm install')
+    .on('commit', async hf => {
+        await hf.program.runCommand('npm install')
 
-        if (ff.variables.get('autoLink')) {
-            await ff.program.runCommand('npm link')
+        if (hf.variables.get('autoInstall')) {
+            await hf.program.runCommand(
+                'hf install local-dir',
+                {
+                    args: [
+                        hf.paths.targetPath(),
+                        '--rebuild-strategy',
+                        hf.variables.get('rebuildStrategy')!
+                    ]
+                })
         }
 
-        await ff.config.save()
+        await hf.config.save()
     })
