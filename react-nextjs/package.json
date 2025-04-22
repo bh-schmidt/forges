@@ -1,0 +1,36 @@
+{
+  "name": "react-nextjs",
+  "description": "Forge for building react apps with nextjs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "clear": "rm -rf dist",
+    "build": "tsc && tsc-alias",
+    "watch": "nodemon --watch scripts --ext * --exec npm run build"
+  },
+  "keywords": [
+    "forge"
+  ],
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "dependencies": {
+    "hyper-forge": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "nodemon": "^3.1.9",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.8.3"
+  },
+  "forge": {
+    "name": "React NextJs",
+    "description": "Builds React apps with NextJs",
+    "new-app-typescript": {
+      "name": "New App (TypeScript)",
+      "description": "Creates a new app using TypeScript",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  },
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    },
+    "lib": [
+      "dom",
+      "es2017",
+      "ES2021"
+    ],
+    "outDir": "../_build/main/",
+    "rootDir": "src",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+  ],
+}

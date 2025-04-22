@@ -1,0 +1,20 @@
+{
+    "name": "my-app",
+    "version": "0.0.1-alpha",
+    "private": true,
+    "productName": "MyApp",
+    "type": "module",
+    "main": "_build/main/index.js",
+    "scripts": {
+        "start": "node scripts/start.js",
+        "clear": "node scripts/clear",
+        "build": "node ./scripts/build.js",
+        "publish": "node ./scripts/publish.js"
+    },
+    "build": {
+        "asar": true,
+        "files": [
+            "_build"
+        ]
+    }
+}

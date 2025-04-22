@@ -1,0 +1,36 @@
+{
+  "name": "electron-apps",
+  "description": "Helps building new electron apps",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "clear": "rm -rf dist",
+    "build": "tsc && tsc-alias",
+    "watch": "nodemon --watch scripts --ext * --exec npm run build"
+  },
+  "keywords": [
+    "forge"
+  ],
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "dependencies": {
+    "hyper-forge": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "nodemon": "^3.1.9",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.8.3"
+  },
+  "forge": {
+    "name": "Electron Apps",
+    "description": "Builds electron apps",
+    "nextjs-typescript": {
+      "name": "NextJs Typescript",
+      "description": "Creates a new Electron app with NextJs Typescript",
+      "default": true
+    }
+  }
+}
