@@ -1,5 +1,5 @@
 {
-  "name": "forge-typescript",
+  "name": "forge-builder",
   "description": "This forge helps you scaffold other forges using TypeScript.",
   "version": "1.0.0",
   "type": "module",
@@ -20,15 +20,15 @@
     "typescript": "^5.8.3"
   },
   "forge": {
-    "name": "Forge Typescript",
-    "description": "Builds other TypeScript-based forges",
-    "new-forge": {
-      "name": "New Forge",
+    "name": "Forge Builder",
+    "description": "Helps building other forges",
+    "new-forge-typescript": {
+      "name": "New Forge (TypeScript)",
       "description": "Creates a new forge",
       "default": true
     },
-    "new-task": {
-      "name": "New Task",
+    "new-task-typescript": {
+      "name": "New Task (TypeScript)",
       "description": "Creates a new task in the current forge"
     }
   },
