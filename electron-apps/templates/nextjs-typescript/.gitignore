@@ -1,12 +1,12 @@
 # Hyper Forge
 **/config.hf.json
 
-# Build
+# build
 _build
 
 # Testing
-main/ipcTest.js
-main/ipcTest.ts
+src/core/ipcs/ipcTest.js
+src/core/ipcs/ipcTest.ts
 
 # Logs
 logs

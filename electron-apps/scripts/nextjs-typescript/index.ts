@@ -4,19 +4,12 @@ export default createForge()
     .configureCommands(program => {
         program
             .option('--project-name <name>', 'The name of the new project.')
-            .option('--target-dir <directory>', 'The directory to inject the files. Default is a mix between CWD and the Project Name.')
+            .option('--target-directory <directory>', 'The directory to inject the files.')
     })
     .validateOptions((option, value) => {
         if (option.name() == 'project-name') {
             if (!value || value.trim() == '')
                 throw 'Invalid project name'
-
-            return true
-        }
-
-        if (option.name() == 'target-dir') {
-            if (!value || value.trim() == '')
-                return 'Invalid target directory'
 
             return true
         }
@@ -36,7 +29,7 @@ export default createForge()
                 }
             },
             {
-                name: 'targetDir',
+                name: 'targetDirectory',
                 type: 'text',
                 message: 'Type the target directory:',
                 initial(_, values) {
@@ -56,31 +49,52 @@ export default createForge()
             },
         ])
 
-        const targetDir = hf.variables.get('targetDir') ?? hf.variables.get('projectName')
-        hf.paths.setTargetDir(targetDir)
+        hf.paths.setTargetDir(hf.variables.get('targetDirectory')!)
     })
     .on('write', async hf => {
         await hf.memFs.inject('**/*')
     })
     .on('commit', async hf => {
-        await hf.program.runCommand('npm install electron-serve')
+        // Saving the config even if empty is a good practice to help other tasks identify the root of the project.
+        await hf.config.save()
+
+        await hf.program.runCommand('npm install', {
+            args: [
+                "commander",
+                "electron-serve",
+                "execa",
+                "express",
+                "express-query-parser",
+                "fs-extra",
+                "glob",
+                "lodash",
+                "moment",
+                "reflect-metadata",
+                "tsyringe",
+                "winston",
+                "winston-daily-rotate-file",
+            ]
+        })
+
         await hf.program.runCommand('npm install -D', {
             args: [
-                "@types/chokidar",
                 "@types/concurrently",
                 "@types/execa",
+                "@types/express",
                 "@types/fs-extra",
+                "@types/jest",
+                "@types/lodash",
                 "@types/node",
-                "chokidar",
                 "concurrently",
                 "electron",
                 "electron-builder",
-                "execa",
-                "fs-extra",
+                "jest",
                 "nodemon",
+                "ts-jest",
+                "ts-mockito",
                 "tsc-alias",
                 "typescript",
-                "wait-on"
+                "wait-on",
             ]
         })
 
@@ -89,13 +103,27 @@ export default createForge()
                 'run',
                 'react-nextjs',
                 'new-app-typescript',
-                '--project-name', 'renderer',
-                '--target-dir', hf.paths.targetPath('renderer'),
-                '--template', 'default',
-                '--disable-prompt-confirmation'
+                '--project-name',
+                'renderer',
+                '--target-directory',
+                hf.paths.targetPath('src/renderer'),
+                '--template',
+                'electron',
+                '--local-port',
+                '8000',
+                '--disable-prompt-confirmation',
             ]
         })
 
-        // Saving the config even if empty is a good practice to help other tasks identify the root of the project.
-        await hf.config.save()
+        await hf.program.runCommand('hf', {
+            args: [
+                'config',
+                'set',
+                'forge',
+                'targetDir',
+                './renderer',
+                '--forge',
+                'react-nextjs'
+            ]
+        })
     })

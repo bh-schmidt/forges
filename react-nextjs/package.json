@@ -16,7 +16,7 @@
     "templates"
   ],
   "dependencies": {
-    "hyper-forge": "^0.1.0"
+    "hyper-forge": "^0.1.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

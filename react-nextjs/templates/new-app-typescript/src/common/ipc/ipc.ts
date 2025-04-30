@@ -1,8 +1,8 @@
 import { IpcChannels } from "./IpcChannels"
 
 interface ElectronIpc {
-    send(channel: IpcChannels, ...args: unknown[]): Promise<unknown>
-    listen(channel: IpcChannels, callback: (...args: unknown[]) => void): () => unknown
+    send<T = unknown>(channel: IpcChannels, ...args: any[]): Promise<T>
+    listen(channel: IpcChannels, callback: (...args: any[]) => void): () => void
 }
 
 declare global {
@@ -11,11 +11,18 @@ declare global {
     }
 }
 
+function ensureClientSide() {
+    if (window === undefined)
+        throw new Error(`Can't use ipc on server side component.`)
+}
+
 export const ipc: ElectronIpc = {
     async send(channel, ...args) {
+        ensureClientSide()
         return await window.electron.send(channel, ...args)
     },
     listen(channel, callback) {
+        ensureClientSide()
         return window.electron.listen(channel, callback)
     }
 }

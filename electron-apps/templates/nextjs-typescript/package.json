@@ -1,16 +1,22 @@
 {
-    "name": "my-app",
-    "version": "0.0.1-alpha",
+    "name": "{{projectName}}",
+    "version": "0.1.0",
     "private": true,
     "productName": "MyApp",
+    "author": "",
+    "license": "ISC",
+    "keywords": [],
     "type": "module",
-    "main": "_build/main/index.js",
+    "main": "_build/core/presentation/index.js",
     "scripts": {
         "start": "node scripts/start.js",
         "clear": "node scripts/clear",
         "build": "node ./scripts/build.js",
-        "publish": "node ./scripts/publish.js"
+        "publish": "node ./scripts/publish.js",
+        "test": "jest --passWithNoTests --config ./src/core/jest.config.js"
     },
+    "dependencies": {},
+    "devDependencies": {},
     "build": {
         "asar": true,
         "files": [

@@ -4,7 +4,6 @@ export default createForge()
     .configureCommands(program => {
         program
             .option('--project-name <name>', 'The name of the new project.')
-            .option('--target-dir <directory>', 'The directory to inject the files. Default is a mix between CWD and the Project Name.')
     })
     .validateOptions((option, value) => {
         if (option.name() == 'project-name') {
@@ -13,15 +12,9 @@ export default createForge()
 
             return true
         }
-
-        if (option.name() == 'target-dir') {
-            if (!value || value.trim() == '')
-                return 'Invalid target directory'
-
-            return true
-        }
     })
     .on('prompt', async hf => {
+        // Putting any path into targetDirectory variable changes automatically the forge's targetDirectory
         await hf.prompts.promptWithConfirmation([
             {
                 name: 'projectName',
@@ -36,7 +29,7 @@ export default createForge()
                 }
             },
             {
-                name: 'targetDir',
+                name: 'targetDirectory',
                 type: 'text',
                 message: 'Type the target directory:',
                 initial(_, values) {
@@ -55,9 +48,6 @@ export default createForge()
                 }
             },
         ])
-
-        const targetDir = hf.variables.get('targetDir') ?? hf.variables.get('projectName')
-        hf.paths.setTargetDir(targetDir)
     })
     .on('write', async hf => {
         await hf.memFs.inject('**/*')

@@ -7,10 +7,108 @@
     <title>Loading</title>
 </head>
 
+<style>
+    * {
+        box-sizing: 0;
+    }
+
+    body,
+    html {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .box-1 {
+        flex: 2;
+        align-content: center;
+    }
+
+    .box-2 {
+        flex: 1;
+    }
+
+    @keyframes rotating {
+        from {
+            -ms-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        to {
+            -ms-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -webkit-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    .image {
+        /* flex: 8; */
+        width: 150px;
+        height: 150px;
+        position: relative;
+        animation: rotating 5s linear infinite;
+        background-color: 'black';
+    }
+
+    .image * {
+        background-color: rgb(5, 20, 105);
+        border: #ffffff33 solid 5px;
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        box-shadow: 0px 0px 5px black;
+    }
+
+    .block-1 {
+        left: 0;
+        top: 0;
+    }
+
+    .block-2 {
+        top: 0;
+        right: 0;
+    }
+
+    .block-3 {
+        right: 0;
+        bottom: 0;
+    }
+
+    .block-4 {
+        bottom: 0;
+        left: 0;
+    }
+</style>
+
 <body>
-    <h1>
-        Loading...
-    </h1>
+    <div class="container">
+        <div class="box-1">
+            <div class="image">
+                <div class="block-1"></div>
+                <div class="block-2"></div>
+                <div class="block-3"></div>
+                <div class="block-4"></div>
+            </div>
+        </div>
+        <div class="box-2">
+            <h1>Loading...</h1>
+        </div>
+    </div>
+
 </body>
 
 </html>

@@ -4,18 +4,14 @@ export default createForge()
     .configureCommands(program => {
         program
             .option('--project-name <name>', 'The name of the new project.')
-            .option('--target-dir <directory>', 'The directory to inject the files. Default is a mix between CWD and the Project Name.')
+            .option('--target-directory <directory>', 'The directory to inject the files.')
             .option('--template <template>', 'The predefined templated to generate')
+            .option('--local-port <port>', 'The port used to run the app locally')
     })
     .validateOptions((option, value) => {
         if (option.name() == 'project-name') {
             if (!value || value.trim() == '')
                 throw 'Invalid project name'
-        }
-
-        if (option.name() == 'target-dir') {
-            if (!value || value.trim() == '')
-                return 'Invalid target directory'
         }
 
         if (option.name() == 'template') {
@@ -42,7 +38,7 @@ export default createForge()
                 }
             },
             {
-                name: 'targetDir',
+                name: 'targetDirectory',
                 type: 'text',
                 message: 'Type the target directory:',
                 initial(_, values) {
@@ -75,29 +71,33 @@ export default createForge()
                         value: 'electron',
                     }
                 ],
+            },
+            {
+                name: 'localPort',
+                type: 'number',
+                message: 'Inform the port for running local:',
+                initial: 3000,
             }
         ])
 
-        const targetDir = hf.variables.get('targetDir') ?? hf.variables.get('projectName')
-        hf.paths.setTargetDir(targetDir)
+        hf.paths.setTargetDir(hf.variables.get('targetDirectory')!)
     })
     .on('write', async hf => {
+        const electronFiles = [
+            'src/common/ipc/**/*',
+        ]
         await hf.memFs.inject('**/*', undefined, {
-            ignore: [
-                'src/types/Ipc.ts',
-                'src/types/IpcChannels.ts',
-            ]
+            ignore: electronFiles
         })
 
         if (hf.variables.get('template') == 'electron') {
-            await hf.memFs.inject([
-                'src/types/Ipc.ts',
-                'src/types/IpcChannels.ts',
-            ])
+            await hf.memFs.inject(electronFiles)
         }
 
-        await hf.memFs.ensureDirectory('src/types')
-        await hf.memFs.ensureDirectory('src/common')
+        await hf.memFs.ensureDirectory('src/common/interfaces')
+        await hf.memFs.ensureDirectory('src/common/types')
+        await hf.memFs.ensureDirectory('src/common/enums')
+        await hf.memFs.ensureDirectory('src/common/ipc')
         await hf.memFs.ensureDirectory('src/stores')
         await hf.memFs.ensureDirectory('src/states')
     })

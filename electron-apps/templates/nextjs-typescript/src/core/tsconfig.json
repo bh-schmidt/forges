@@ -1,0 +1,59 @@
+{
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "preserve",
+    "lib": [
+      "dom",
+      "es2017",
+      "ES2021"
+    ],
+    "types": [
+      "jest",
+      "node",
+      "ts-mockito"
+    ],
+    "outDir": "../../_build/core",
+    "baseUrl": "./",
+    "paths": {
+      "@/application/*": [
+        "./application/*"
+      ],
+      "@domain/*": [
+        "./domain/*"
+      ],
+      "@infrastructure/*": [
+        "./infrastructure/*"
+      ],
+      "@presentation/*": [
+        "./presentation/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*",
+    "../../jest.config.js"
+  ]
+}
