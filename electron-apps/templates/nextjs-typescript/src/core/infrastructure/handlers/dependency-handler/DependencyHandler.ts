@@ -1,4 +1,4 @@
-import { AppLogger } from "@infrastructure/logs/Logger";
+import { AppLogger } from "@infrastructure/logger/Logger";
 import EventEmitter from "events";
 import { injectable } from "tsyringe";
 import { install } from "./internal/install";

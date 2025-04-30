@@ -1,57 +1,30 @@
 import "reflect-metadata";
 
-import { DependencyHandler } from "@infrastructure/handlers/dependency-handler/DependencyHandler";
-import { AppLogger } from "@infrastructure/logs/Logger";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import serve from 'electron-serve';
 import { availableParallelism } from "os";
-import { container } from "tsyringe";
-import { parseOptions } from "./parseOptions";
-import { appPaths } from "./paths";
-import { httpPort, startHttpServer } from "./server";
-import { join } from "path";
-import { glob } from "glob";
-import { pathToFileURL } from "url";
+import { parseOptions } from "./AppOptions";
+import { appPaths } from "./appPaths";
+import { configureLock } from "./config/configureLock";
+import { configureQuiting } from "./config/configureQuiting";
+import { configureTitle } from "./config/configureTitle";
+import { configureTray } from "./config/configureTray";
+import { installDependencies } from "./config/installDependencies";
+import { loadDependencies } from "./config/loadDependencies";
+import { loadIpcs } from "./config/loadIpcs";
+import { startHttpServer } from "./http/server";
 
 process.env.UV_THREADPOOL_SIZE = availableParallelism() as any
-
-const dependencyHandler = container.resolve(DependencyHandler)
-const logger = container.resolve(AppLogger)
-
 const options = parseOptions()
-if (options.installDependencies) {
-    await dependencyHandler.install(options.callbackPort)
-    app.exit()
-}
 
-await startHttpServer()
+await installDependencies(options)
+configureLock()
 
 export let mainWindow: BrowserWindow
 const serveApp = app.isPackaged ? serve({ directory: appPaths.renderer }) : null
 
 app.on('ready', async () => {
-    const loadingWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        frame: false
-    })
-
-    if (!app.isPackaged) {
-        loadingWindow.webContents.openDevTools()
-    }
-
-    await loadingWindow.loadFile(appPaths.loading)
-
-    try {
-        if (!await dependencyHandler.check()) {
-            await dependencyHandler.runInstaller(httpPort)
-        }
-    } catch (error) {
-        logger.error('Error checking/installing dependencies.', error)
-        app.exit(1)
-    }
-
-    loadingWindow.close()
+    await loadDependencies()
 
     mainWindow = new BrowserWindow({
         width: 800,
@@ -61,12 +34,18 @@ app.on('ready', async () => {
             nodeIntegration: false,
             contextIsolation: true,
             preload: appPaths.preload,
+            devTools: !app.isPackaged
         },
     });
+
+    await configureTitle()
+    configureQuiting()
+    configureTray()
 
     mainWindow.maximize()
 
     if (app.isPackaged) {
+        Menu.setApplicationMenu(null)
         serveApp!(mainWindow)
     }
     else {
@@ -77,15 +56,5 @@ app.on('ready', async () => {
 
 app.on('window-all-closed', app.quit)
 
-const ipcsDir = join(appPaths.core, 'presentation/ipcs')
-const files = await glob('**/*.js', {
-    cwd: ipcsDir,
-    absolute: true,
-    nodir: true,
-    stat: true
-})
-
-for (const file of files) {
-    const url = pathToFileURL(file)
-    await import(url.href)
-}
+await loadIpcs()
+await startHttpServer()

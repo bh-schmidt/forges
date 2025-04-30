@@ -1,29 +1,15 @@
-import { DependencyHandler } from "@infrastructure/handlers/dependency-handler/DependencyHandler";
-import { AppLogger } from "@infrastructure/logs/Logger";
+import { AppLogger } from "@infrastructure/logger/Logger";
 import express from "express";
 import { queryParser } from "express-query-parser";
 import { container } from "tsyringe";
-
-const logger = container.resolve(AppLogger)
+import depencencies from "./routes/dependencies";
 
 const initialPort = 49152;
 export let httpPort = initialPort
-const app = express()
-
-app.use(queryParser({
-    parseBoolean: true,
-    parseNull: true,
-    parseNumber: true,
-    parseUndefined: true
-}))
-
-app.patch('/dependencies/:state', (req, res) => {
-    const state = req.params.state == 'true'
-    DependencyHandler.events.emit('install', state)
-    res.send()
-})
+export const app = express()
 
 export async function startHttpServer(port?: number) {
+    const logger = container.resolve(AppLogger)
     port ??= initialPort
 
     if (port > initialPort + 10) {
@@ -47,3 +33,12 @@ export async function startHttpServer(port?: number) {
         })
     })
 }
+
+app.use(queryParser({
+    parseBoolean: true,
+    parseNull: true,
+    parseNumber: true,
+    parseUndefined: true
+}))
+
+app.use("/dependencies", depencencies)

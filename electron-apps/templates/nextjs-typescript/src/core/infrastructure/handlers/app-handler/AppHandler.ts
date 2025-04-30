@@ -1,10 +1,10 @@
-import { AppLogger } from "@infrastructure/logs/Logger";
+import { AppLogger } from "@infrastructure/logger/Logger";
 import { app } from "electron";
 import { execa, Options } from "execa";
 import { injectable } from "tsyringe";
 
 @injectable()
-export class AppDependenciesHandler {
+export class AppHandler {
     constructor(private logger: AppLogger) { }
     async hasAdminPrivileges() {
         const { failed } = await execa<Options>('NET SESSION', { reject: false, shell: true })
