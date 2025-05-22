@@ -58,7 +58,9 @@ export default createForge()
         // Saving the config even if empty is a good practice to help other tasks identify the root of the project.
         await hf.config.save()
 
-        await hf.program.runCommand('npm install', {
+        await hf.program.runCommand('npm install')
+
+        await hf.program.runCommand('npm install -w app/core', {
             args: [
                 "commander",
                 "electron-serve",
@@ -76,7 +78,7 @@ export default createForge()
             ]
         })
 
-        await hf.program.runCommand('npm install -D', {
+        await hf.program.runCommand('npm install -D -w app/core', {
             args: [
                 "@types/concurrently",
                 "@types/execa",
@@ -85,11 +87,20 @@ export default createForge()
                 "@types/jest",
                 "@types/lodash",
                 "@types/node",
-                "concurrently",
                 "electron",
                 "electron-builder",
-                "jest",
+            ]
+        })
+
+        await hf.program.runCommand('npm install -D', {
+            args: [
+                "@types/execa",
+                "@types/fs-extra",
+                "execa",
+                "fs-extra",
                 "nodemon",
+                "concurrently",
+                "jest",
                 "ts-jest",
                 "ts-mockito",
                 "tsc-alias",
@@ -106,14 +117,16 @@ export default createForge()
                 '--project-name',
                 'renderer',
                 '--target-directory',
-                hf.paths.targetPath('src/renderer'),
+                hf.paths.targetPath('app/renderer'),
                 '--template',
                 'electron',
                 '--local-port',
                 '8000',
                 '--disable-prompt-confirmation',
-            ]
+            ],
         })
+
+        await hf.program.runCommand('npm install')
 
         await hf.program.runCommand('hf', {
             args: [

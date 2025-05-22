@@ -1,7 +1,7 @@
 import { execa, Options } from "execa"
 import { DependencyHandler } from "../DependencyHandler"
 
-export async function runInstaller(listeningPort: number, handler: DependencyHandler) {
+export async function runInstaller(this: DependencyHandler,listeningPort: number) {
     const args = [...process.argv]
     const executable = args.shift()
     const cleanArgs = args.map(e => e.replace('"', '\\"'))
@@ -22,12 +22,12 @@ export async function runInstaller(listeningPort: number, handler: DependencyHan
         ],
         {
             all: true,
-            shell: true,
+            shell: false,
             reject: false
         })
 
     if (all) {
-        handler.logger.info(all)
+        this.logger.info(all)
     }
 
     if (failed) {
@@ -39,7 +39,7 @@ export async function runInstaller(listeningPort: number, handler: DependencyHan
         throw new Error('Error waiting for dependencies to be installed')
     }
 
-    handler.logger.info('Dependencies installed')
+    this.logger.info('Dependencies installed')
 }
 
 async function waitForCallback(signal: AbortSignal) {

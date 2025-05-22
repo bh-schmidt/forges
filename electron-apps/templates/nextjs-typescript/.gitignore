@@ -5,8 +5,8 @@
 _build
 
 # Testing
-src/core/ipcs/ipcTest.js
-src/core/ipcs/ipcTest.ts
+app/core/ipcs/ipcTest.js
+app/core/ipcs/ipcTest.ts
 
 # Logs
 logs

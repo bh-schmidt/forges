@@ -1,5 +1,6 @@
 import { DependencyHandler } from "@infrastructure/handlers/dependency-handler/DependencyHandler"
 import { AppLogger } from "@infrastructure/logger/Logger"
+import { AppOptions } from "@presentation/AppOptions"
 import { appPaths } from "@presentation/appPaths"
 import { httpPort } from "@presentation/http/server"
 import { app, BrowserWindow } from "electron"
@@ -8,11 +9,15 @@ import { container } from "tsyringe"
 const dependencyHandler = container.resolve(DependencyHandler)
 const logger = container.resolve(AppLogger)
 
-export async function loadDependencies() {
+export async function loadDependencies(options: AppOptions) {
     const loadingWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        frame: false
+        frame: false,
+        icon: appPaths.icon,
+        webPreferences: {
+            devTools: !app.isPackaged || options.devMode
+        }
     })
 
     if (!app.isPackaged) {

@@ -7,12 +7,12 @@ const options = {
 }
 
 await remove('_build')
-await remove('src/renderer/out')
+await remove('app/renderer/out')
 
-await execa('npm run build --prefix ./src/renderer/', options)
-await execa('tsc --build src/core/tsconfig.json && tsc-alias -p src/core/tsconfig.json', options)
+await execa('npm run build --prefix ./app/core/', options)
+await execa('npm run build --prefix ./app/renderer/', options)
 
 await copy('assets', '_build/assets')
-await copy('src/renderer/out', '_build/renderer')
+await copy('app/renderer/out', '_build/renderer')
 
-await remove('src/renderer/out')
+await remove('app/renderer/out')

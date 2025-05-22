@@ -4,6 +4,7 @@ export function parseOptions() {
     const command = new Command()
         .option('--install-dependencies', 'Executes program in installer mode')
         .option('--callback-port <port>', 'Callback port for communication between instances', intParser)
+        .option('--dev-mode', 'Runs app in dev mode')
 
     command.parse()
     return command.opts<AppOptions>()
@@ -12,6 +13,7 @@ export function parseOptions() {
 export interface AppOptions {
     installDependencies?: boolean
     callbackPort?: number
+    devMode?: boolean
 }
 
 function intParser(value: string) {

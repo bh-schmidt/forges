@@ -3,11 +3,7 @@ import concurrently from "concurrently"
 await concurrently(
     [
         {
-            command: `nodemon --watch ./src/core --ext ts,js,json --exec \
-                "tsc -p src/core/tsconfig.json \
-                    --noUnusedLocals false \
-                    --noUnusedParameters false \
-                && tsc-alias -p src/core/tsconfig.json"`,
+            command: `nodemon --watch ./app/core --ext ts,js,json --exec "npm run build-dev --prefix app/core"`,
             name: 'REBUILD',
             prefixColor: 'magenta'
         },
@@ -17,7 +13,7 @@ await concurrently(
             prefixColor: 'yellow'
         },
         {
-            command: 'npm run dev --prefix ./src/renderer/',
+            command: 'npm run dev --prefix ./app/renderer/',
             name: 'NEXT',
             prefixColor: 'green'
         },

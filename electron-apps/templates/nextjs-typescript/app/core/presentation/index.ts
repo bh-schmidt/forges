@@ -1,10 +1,13 @@
 import "reflect-metadata";
-
+//
+import { configureEnvironment } from "./config/configureEnvironment";
+configureEnvironment()
+//
 import { app, BrowserWindow, Menu } from "electron";
 import serve from 'electron-serve';
 import { availableParallelism } from "os";
+import { appPaths } from "../infrastructure/constants/appPaths";
 import { parseOptions } from "./AppOptions";
-import { appPaths } from "./appPaths";
 import { configureLock } from "./config/configureLock";
 import { configureQuiting } from "./config/configureQuiting";
 import { configureTitle } from "./config/configureTitle";
@@ -24,7 +27,7 @@ export let mainWindow: BrowserWindow
 const serveApp = app.isPackaged ? serve({ directory: appPaths.renderer }) : null
 
 app.on('ready', async () => {
-    await loadDependencies()
+    await loadDependencies(options)
 
     mainWindow = new BrowserWindow({
         width: 800,
@@ -34,7 +37,7 @@ app.on('ready', async () => {
             nodeIntegration: false,
             contextIsolation: true,
             preload: appPaths.preload,
-            devTools: !app.isPackaged
+            devTools: !app.isPackaged || options.devMode
         },
     });
 
@@ -45,7 +48,10 @@ app.on('ready', async () => {
     mainWindow.maximize()
 
     if (app.isPackaged) {
-        Menu.setApplicationMenu(null)
+        if (!options.devMode) {
+            Menu.setApplicationMenu(null)
+        }
+        
         serveApp!(mainWindow)
     }
     else {

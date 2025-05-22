@@ -1,8 +1,8 @@
 import http from 'http';
 import { DependencyHandler } from '../DependencyHandler';
 
-export async function install(callbackPort: number | undefined, handler: DependencyHandler) {
-    handler.logger.info('Installing dependencies')
+export async function install(this: DependencyHandler, callbackPort: number | undefined) {
+    this.logger.info('Installing dependencies')
     await sendCallback(callbackPort, true)
 }
 

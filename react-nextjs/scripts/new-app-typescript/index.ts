@@ -102,6 +102,10 @@ export default createForge()
         await hf.memFs.ensureDirectory('src/states')
     })
     .on('commit', async hf => {
+        console.log('path: ', hf.paths.targetPath())
+        
+        await hf.program.runCommand('npm install')
+
         await hf.program.runCommand('npm install', {
             args: [
                 'react',

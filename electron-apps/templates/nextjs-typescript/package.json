@@ -2,7 +2,7 @@
     "name": "{{projectName}}",
     "version": "0.1.0",
     "private": true,
-    "productName": "MyApp",
+    "productName": "{{projectName}}",
     "author": "",
     "license": "ISC",
     "keywords": [],
@@ -13,14 +13,20 @@
         "clear": "node scripts/clear",
         "build": "node ./scripts/build.js",
         "publish": "node ./scripts/publish.js",
-        "test": "jest --passWithNoTests --config ./src/core/jest.config.js"
+        "test": "jest --passWithNoTests --config ./app/core/jest.config.js"
     },
-    "dependencies": {},
-    "devDependencies": {},
     "build": {
         "asar": true,
         "files": [
             "_build"
-        ]
-    }
+        ],
+        "win": {
+            "icon": "assets/taskbar.ico"
+        }
+    },
+    "workspaces": [
+        "app/core",
+        "app/renderer"
+    ],
+    "devDependencies": {}
 }

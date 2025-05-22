@@ -1,0 +1,12 @@
+{
+    "name": "core",
+    "scripts": {
+        "build": "tsc && tsc-alias",
+        "build-dev": "tsc --noUnusedLocals false --noUnusedParameters false && tsc-alias"
+    },
+    "type": "module",
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+}

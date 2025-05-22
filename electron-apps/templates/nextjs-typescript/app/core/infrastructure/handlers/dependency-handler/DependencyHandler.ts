@@ -18,11 +18,6 @@ export class DependencyHandler {
         return true
     }
 
-    async install(listeningPort?: number) {
-        await install(listeningPort, this)
-    }
-
-    async runInstaller(listeningPort: number) {
-        await runInstaller(listeningPort, this)
-    }
+    install = install
+    runInstaller = runInstaller
 }
