@@ -1,4 +1,4 @@
-import { createForge } from 'hyper-forge'
+import { createForge, ReservedVariablesEnum } from 'hyper-forge'
 
 export default createForge()
     .configureCommands(program => {
@@ -70,11 +70,12 @@ export default createForge()
                 "fs-extra",
                 "glob",
                 "lodash",
-                "moment",
+                "dayjs",
                 "reflect-metadata",
                 "tsyringe",
                 "winston",
                 "winston-daily-rotate-file",
+                "piscina"
             ]
         })
 
@@ -103,6 +104,7 @@ export default createForge()
                 "jest",
                 "ts-jest",
                 "ts-mockito",
+                "ts-node",
                 "tsc-alias",
                 "typescript",
                 "wait-on",
@@ -128,15 +130,10 @@ export default createForge()
 
         await hf.program.runCommand('npm install')
 
-        await hf.program.runCommand('hf', {
-            args: [
-                'config',
-                'set',
-                'forge',
-                'targetDir',
-                './renderer',
-                '--forge',
-                'react-nextjs'
-            ]
+        await hf.config.set({
+            key: ReservedVariablesEnum.INITIAL_DIRECTORY,
+            value: './app/renderer',
+            scope: 'forge',
+            forgeId: 'react-nextjs'
         })
     })

@@ -1,11 +1,10 @@
 import { container } from "tsyringe";
-import { mainWindow } from "..";
 import { AppHandler } from "@infrastructure/handlers/app-handler/AppHandler";
 import { AppLogger } from "@infrastructure/logger/Logger";
+import { getMainWindow } from "@presentation/mainWindow";
 
 const appHandler = container.resolve(AppHandler)
 const logger = container.resolve(AppLogger)
-
 
 export async function configureTitle() {
     const isAdmin = await appHandler.hasAdminPrivileges();
@@ -17,6 +16,7 @@ export async function configureTitle() {
     }
 
     const baseTitle = isAdmin ? 'Admin: ' : ''
+    const mainWindow = getMainWindow()
     mainWindow.webContents.on('page-title-updated', (event, title) => {
         event.preventDefault()
         mainWindow.setTitle(baseTitle + title)

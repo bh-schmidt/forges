@@ -1,11 +1,12 @@
-import "reflect-metadata";
+import { availableParallelism } from "os";
+process.env.UV_THREADPOOL_SIZE = availableParallelism().toString()
 //
-import { configureEnvironment } from "./config/configureEnvironment";
-configureEnvironment()
+import "reflect-metadata";
+import "./config/configureDayJs";
+import "./config/configureEnvironment";
 //
 import { app, BrowserWindow, Menu } from "electron";
 import serve from 'electron-serve';
-import { availableParallelism } from "os";
 import { appPaths } from "../infrastructure/constants/appPaths";
 import { parseOptions } from "./AppOptions";
 import { configureLock } from "./config/configureLock";
@@ -16,20 +17,18 @@ import { installDependencies } from "./config/installDependencies";
 import { loadDependencies } from "./config/loadDependencies";
 import { loadIpcs } from "./config/loadIpcs";
 import { startHttpServer } from "./http/server";
+import { setMainWindow } from "./mainWindow";
 
-process.env.UV_THREADPOOL_SIZE = availableParallelism() as any
 const options = parseOptions()
 
 await installDependencies(options)
 configureLock()
 
-export let mainWindow: BrowserWindow
 const serveApp = app.isPackaged ? serve({ directory: appPaths.renderer }) : null
-
 app.on('ready', async () => {
     await loadDependencies(options)
 
-    mainWindow = new BrowserWindow({
+    const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         icon: appPaths.icon,
@@ -40,6 +39,7 @@ app.on('ready', async () => {
             devTools: !app.isPackaged || options.devMode
         },
     });
+    setMainWindow(mainWindow)
 
     await configureTitle()
     configureQuiting()
@@ -51,7 +51,7 @@ app.on('ready', async () => {
         if (!options.devMode) {
             Menu.setApplicationMenu(null)
         }
-        
+
         serveApp!(mainWindow)
     }
     else {

@@ -1,5 +1,5 @@
+import { getMainWindow } from "@presentation/mainWindow"
 import { app } from "electron"
-import { mainWindow } from ".."
 
 export function configureQuiting() {
     let isQuiting = false
@@ -8,6 +8,7 @@ export function configureQuiting() {
         isQuiting = true
     })
 
+    const mainWindow = getMainWindow()
     mainWindow.on('close', (event) => {
         if (!isQuiting) {
             event.preventDefault()

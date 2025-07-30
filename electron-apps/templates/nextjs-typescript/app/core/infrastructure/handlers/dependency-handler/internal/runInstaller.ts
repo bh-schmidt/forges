@@ -27,7 +27,7 @@ export async function runInstaller(this: DependencyHandler,listeningPort: number
         })
 
     if (all) {
-        this.logger.info(all)
+        this.logger.info(all as any)
     }
 
     if (failed) {
@@ -49,7 +49,6 @@ async function waitForCallback(signal: AbortSignal) {
         })
 
         DependencyHandler.events.on('install', (value) => {
-            console.log(value)
             res(value)
         })
     })

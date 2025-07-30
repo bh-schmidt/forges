@@ -13,7 +13,7 @@
         "clear": "node scripts/clear",
         "build": "node ./scripts/build.js",
         "publish": "node ./scripts/publish.js",
-        "test": "jest --passWithNoTests --config ./app/core/jest.config.js"
+        "test": "node ./scripts/test.js"
     },
     "build": {
         "asar": true,

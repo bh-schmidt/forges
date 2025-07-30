@@ -1,5 +1,5 @@
 import { AppLogger } from "@infrastructure/logger/Logger";
-import { app } from "electron";
+import { app, RelaunchOptions } from "electron";
 import { execa, Options } from "execa";
 import { injectable } from "tsyringe";
 
@@ -11,10 +11,19 @@ export class AppHandler {
         return !failed
     }
 
+    async restart(options?: RelaunchOptions) {
+        app.relaunch(options)
+    }
+
     async restartAsAdmin() {
         if (await this.hasAdminPrivileges()) {
             this.logger.info('App already has admin privileges')
             return
+        }
+
+        const hasLock = app.hasSingleInstanceLock()
+        if (hasLock) {
+            app.releaseSingleInstanceLock()
         }
 
         const args = [...process.argv]
@@ -38,11 +47,19 @@ export class AppHandler {
             })
 
         if (all) {
-            this.logger.info(all)
+            this.logger.info(all as string)
         }
 
         if (!failed) {
             app.quit()
+            return
+        }
+
+        if (hasLock) {
+            const locked = app.requestSingleInstanceLock()
+            if (!locked) {
+                this.logger.error(`Couldn't re-aquire the instance lock after failing the restart.`)
+            }
         }
     }
 }
