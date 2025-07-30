@@ -84,8 +84,11 @@ export default createForge()
     })
     .on('write', async hf => {
         const electronFiles = [
-            'src/common/ipc/**/*',
+            'src/common/classes/ResultObject.ts',
+            'src/common/components/path-picker/**/*',
+            'src/common/ipcs/**/*',
         ]
+
         await hf.memFs.inject('**/*', undefined, {
             ignore: electronFiles
         })
@@ -97,13 +100,10 @@ export default createForge()
         await hf.memFs.ensureDirectory('src/common/interfaces')
         await hf.memFs.ensureDirectory('src/common/types')
         await hf.memFs.ensureDirectory('src/common/enums')
-        await hf.memFs.ensureDirectory('src/common/ipc')
         await hf.memFs.ensureDirectory('src/stores')
         await hf.memFs.ensureDirectory('src/states')
     })
     .on('commit', async hf => {
-        console.log('path: ', hf.paths.targetPath())
-        
         await hf.program.runCommand('npm install')
 
         await hf.program.runCommand('npm install', {
@@ -111,8 +111,9 @@ export default createForge()
                 'react',
                 'react-dom',
                 'next',
-                'moment',
-                'zustand'
+                'dayjs',
+                'zustand',
+                'set-interval-async'
             ]
         })
 

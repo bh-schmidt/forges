@@ -1,8 +1,8 @@
-import { IpcChannels } from "./IpcChannels"
+import { ResultObject } from "@/common/classes/ResultObject"
 
 interface ElectronIpc {
-    send<T = unknown>(channel: IpcChannels, ...args: any[]): Promise<T>
-    listen(channel: IpcChannels, callback: (...args: any[]) => void): () => void
+    send<TValue = any, TError = any>(channel: string, ...args: any[]): Promise<ResultObject<TValue, TError>>
+    listen(channel: string, callback: (...args: any[]) => void): () => void
 }
 
 declare global {
@@ -19,7 +19,8 @@ function ensureClientSide() {
 export const ipc: ElectronIpc = {
     async send(channel, ...args) {
         ensureClientSide()
-        return await window.electron.send(channel, ...args)
+        const result = await window.electron.send(channel, ...args)
+        return new ResultObject(result)
     },
     listen(channel, callback) {
         ensureClientSide()

@@ -1,8 +1,7 @@
 {% if template == 'electron' -%}
 'use client'
 
-import { ipc } from "@/common/ipc/ipc";
-import { IpcChannels } from "@/common/ipc/IpcChannels";
+import { getUsers } from "@/ipcs/users/getUsers";
 import { useEffect } from "react";
 
 {% endif -%}
@@ -10,7 +9,7 @@ import { useEffect } from "react";
 export default function Home() {
 {%- if template == 'electron' %}
     useEffect(() => {
-        ipc.send<any[]>(IpcChannels.GetUsers)
+        getUsers()
             .then(users => {
                 console.log('users', users)
             })
