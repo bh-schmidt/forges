@@ -1,6 +1,46 @@
-import { createForge, ReservedVariablesEnum } from 'hyper-forge'
+import { createForge, ForgeComposer, VariableMapper } from 'hyper-forge'
+import z from 'zod'
+
+const idValidation = z
+    .string()
+    .regex(/^[a-zA-Z0-9_-]+$/g, 'Invalid id, allowed characters: (a-z) (A-Z) (0-9) (_) (-).')
+
+const map = new VariableMapper({
+    projectName: {
+        parser: z.string('Project name is required.')
+            .trim()
+            .nonempty('Project name is required.')
+            .pipe(idValidation)
+    },
+    targetDirectory: {
+        parser: z
+            .string('Target directory is required.')
+            .trim()
+            .nonempty('Target directory is required.')
+            .refine(arg => {
+                return !/[<>:"|?*\x00-\x1F]/.test(arg)
+            }, 'Invalid directory')
+    }
+}).withOptions({
+    allowUnmapped: true
+})
+
+const reactComposer = new ForgeComposer({
+    forgeId: 'react-nextjs',
+    taskId: 'new-app-typescript',
+    composerName: 'React options',
+    initialVariables: {
+        projectName: 'renderer',
+        template: 'electron',
+        localPort: 8000,
+        targetDirectory: '.',
+        SKIP_PROMPTS: ['projectName', 'template', 'localPort', 'targetDirectory'],
+    }
+})
+
 
 export default createForge()
+    .registerVariables(map)
     .configureCommands(program => {
         program
             .option('--project-name <name>', 'The name of the new project.')
@@ -14,18 +54,15 @@ export default createForge()
             return true
         }
     })
+    .registerComposer(reactComposer)
     .on('prompt', async hf => {
-        await hf.prompts.promptWithConfirmation([
+        await hf.prompts.prompt([
             {
                 name: 'projectName',
                 type: 'text',
                 message: 'Type the project name:',
-                validate(value) {
-                    if (!value) {
-                        return 'Project name is required'
-                    }
-
-                    return true
+                async validate(value) {
+                    return await map.validate('projectName', value)
                 }
             },
             {
@@ -35,27 +72,22 @@ export default createForge()
                 initial(_, values) {
                     return `./${values.projectName}`
                 },
-                validate(value) {
-                    if (!value || value.trim() == '') {
-                        return 'Target directory is required'
-                    }
-
-                    if (/[<>:"|?*\x00-\x1F]/.test(value)) {
-                        return "Invalid directory"
-                    }
-
-                    return true
+                async validate(value) {
+                    return await map.validate('targetDirectory', value)
                 }
             },
         ])
-
-        hf.paths.setTargetDir(hf.variables.get('targetDirectory')!)
+    })
+    .on('prepare', async hf => {
+        const targetDirectory = await hf.variables.get('targetDirectory')
+        hf.paths.setTargetDir(targetDirectory)
+        const rendererDir = hf.paths.targetPath('app/renderer')
+        reactComposer.paths.setTargetDir(rendererDir)
     })
     .on('write', async hf => {
         await hf.memFs.inject('**/*')
     })
     .on('commit', async hf => {
-        // Saving the config even if empty is a good practice to help other tasks identify the root of the project.
         await hf.config.save()
 
         await hf.program.runCommand('npm install')
@@ -111,27 +143,10 @@ export default createForge()
             ]
         })
 
-        await hf.program.runCommand('hf', {
-            args: [
-                'run',
-                'react-nextjs',
-                'new-app-typescript',
-                '--project-name',
-                'renderer',
-                '--target-directory',
-                hf.paths.targetPath('app/renderer'),
-                '--template',
-                'electron',
-                '--local-port',
-                '8000',
-                '--disable-prompt-confirmation',
-            ],
-        })
-
         await hf.program.runCommand('npm install')
 
         await hf.config.set({
-            key: ReservedVariablesEnum.INITIAL_DIRECTORY,
+            key: 'INITIAL_DIRECTORY',
             value: './app/renderer',
             scope: 'forge',
             forgeId: 'react-nextjs'
