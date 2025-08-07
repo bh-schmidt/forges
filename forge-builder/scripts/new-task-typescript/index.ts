@@ -14,7 +14,7 @@ export default createForge()
         }
     })
     .on('prompt', async hf => {
-        await hf.prompts.promptWithConfirmation([
+        await hf.prompts.prompt([
             {
                 name: 'taskName',
                 type: 'text',
@@ -41,7 +41,7 @@ export default createForge()
         await hf.memFs.inject('**/*')
     })
     .on('commit', async hf => {
-        if (hf.variables.get('buildForge')) {
+        if (await hf.variables.get('buildForge')) {
             await hf.program.runCommand('npm run build')
         }
 

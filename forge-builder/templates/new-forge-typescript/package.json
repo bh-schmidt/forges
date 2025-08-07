@@ -1,35 +1,28 @@
 {
-  "name": "{{forgeName}}",
-  "description": "{{description}}",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "clear": "rm -rf dist",
-    "build": "tsc && tsc-alias",
-    "rebuild": "npm run clear && npm run build",
-    "watch": "nodemon --watch scripts --ext * --exec npm run build"
-  },
-  "keywords": [],
-  "files": [
-    "dist",
-    "templates"
-  ],
-  "dependencies": {
-    "hyper-forge": "0.x"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "nodemon": "^3.1.9",
-    "tsc-alias": "^1.8.15",
-    "typescript": "^5.8.3"
-  },
-  "forge": {
-    "name": "{{forgeName}}",
-    "description": "Scaffolds files and folders based on customizable tasks",
-    "{{defaultTask}}": {
-      "name": "{{defaultTask}}",
-      "description": "Creates a new folder and injects the template files",
-      "default": true
+    "name": "{{forgeId}}",
+    "description": "{{forgeDescription}}",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "clear": "rm -rf dist",
+        "build": "tsc && tsc-alias",
+        "rebuild": "npm run clear && npm run build",
+        "watch": "nodemon --watch scripts --ext * --exec npm run build"
+    },
+    "keywords": [],
+    "files": [
+        "dist",
+        "templates"
+    ],
+    "dependencies": {},
+    "devDependencies": {},
+    "forge": {
+        "name": "{{forgeName}}",
+        "description": "{{forgeDescription}}",
+        "{{defaultTaskId}}": {
+            "name": "{{defaultTaskName}}",
+            "description": "{{defaultTaskDescription}}",
+            "default": true
+        }
     }
-  }
 }

@@ -1,7 +1,13 @@
 # {{forgeName}}
 
-{{description}}
+{{forgeDescription}}
 
+## About
+
+### Tasks
+
+* **{{defaultTaskName}}** - {{defaultTaskDescription}}
+ 
 ## Dependencies
 
 * [Node.js](https://nodejs.org/) — Required to run and build the forge. Recommended version: `>=18`.
