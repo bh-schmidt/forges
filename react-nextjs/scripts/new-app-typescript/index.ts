@@ -3,7 +3,7 @@ import z from 'zod'
 
 const idValidation = z
     .string()
-    .regex(/^[a-zA-Z0-9_-]+$/g, 'Invalid id, allowed characters: (a-z) (A-Z) (0-9) (_) (-).')
+    .regex(/^[a-zA-Z0-9._-]+$/g, 'Invalid id, allowed characters: (a-z) (A-Z) (0-9) (_) (-) (.)')
 
 const pathValidation = z.string()
     .refine(value => !/[<>:"|?*\x00-\x1F]/.test(value), "Invalid directory.")
@@ -21,21 +21,25 @@ const templates = [
 
 const mapper = new VariableMapper({
     projectName: {
+        description: 'The new project name.',
         parser: z.string('Invalid project name.')
             .trim()
             .nonempty('Project name is required.')
             .pipe(idValidation)
     },
     targetDirectory: {
+        description: 'The directory where the new project will be created.',
         parser: z.string('Invalid target directory.')
             .trim()
             .nonempty('Target directory is required.')
             .pipe(pathValidation)
     },
     template: {
+        description: 'The template to use in the project creation.',
         parser: z.literal(templates.map(e => e.value), 'Invalid template.')
     },
     localPort: {
+        description: 'The local port used to run the server.',
         parser: z.coerce
             .number('Invalid port.')
             .min(1, 'Invalid port.')
@@ -44,28 +48,6 @@ const mapper = new VariableMapper({
 
 export default createForge()
     .registerVariables(mapper)
-    .configureCommands(program => {
-        program
-            .option('--project-name <name>', 'The name of the new project.')
-            .option('--target-directory <directory>', 'The directory to inject the files.')
-            .option('--template <template>', 'The predefined templated to generate')
-            .option('--local-port <port>', 'The port used to run the app locally')
-    })
-    .validateOptions((option, value) => {
-        if (option.name() == 'project-name') {
-            if (!value || value.trim() == '')
-                throw 'Invalid project name'
-        }
-
-        if (option.name() == 'template') {
-            if (!value || value.trim() == '')
-                return 'Template is required'
-
-            if (!['default', 'electron'].includes(value)) {
-                return 'Invalid template. Allowed options: default, electron.'
-            }
-        }
-    })
     .on('prompt', async hf => {
         await hf.prompts.prompt([
             {

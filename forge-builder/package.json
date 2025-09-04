@@ -1,40 +1,45 @@
 {
-  "name": "forge-builder",
-  "description": "This forge helps you scaffold other forges using TypeScript.",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "clear": "rm -rf dist",
-    "build": "tsc && tsc-alias",
-    "rebuild": "npm run clear && npm run build",
-    "watch": "nodemon --watch scripts --ext * --exec npm run build"
-  },
-  "keywords": [],
-  "files": [
-    "dist",
-    "templates"
-  ],
-  "dependencies": {
-    "hyper-forge": "^0.1.3",
-    "zod": "^4.0.15"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "nodemon": "^3.1.9",
-    "tsc-alias": "^1.8.15",
-    "typescript": "^5.8.3"
-  },
-  "forge": {
-    "name": "Forge Builder",
-    "description": "Helps building other forges",
-    "new-forge-typescript": {
-      "name": "New Forge (TypeScript)",
-      "description": "Creates a new forge",
-      "default": true
+    "name": "forge-builder",
+    "description": "This forge helps you scaffold other forges using TypeScript.",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "clear": "rm -rf dist",
+        "build": "tsc && tsc-alias",
+        "rebuild": "npm run clear && npm run build",
+        "watch": "nodemon --watch scripts --ext * --exec npm run build"
     },
-    "new-task-typescript": {
-      "name": "New Task (TypeScript)",
-      "description": "Creates a new task in the current forge"
+    "keywords": [],
+    "files": [
+        "dist",
+        "templates"
+    ],
+    "dependencies": {
+        "hyper-forge": "^0.2.0",
+        "istextorbinary": "^9.5.0",
+        "zod": "^4.0.15"
+    },
+    "devDependencies": {
+        "@types/node": "^22.14.0",
+        "nodemon": "^3.1.9",
+        "tsc-alias": "^1.8.15",
+        "typescript": "^5.8.3"
+    },
+    "forge": {
+        "name": "Forge Builder",
+        "description": "Helps building other forges",
+        "new-forge-typescript": {
+            "name": "New Forge (TypeScript)",
+            "description": "Creates a new forge",
+            "default": true
+        },
+        "new-task-typescript": {
+            "name": "New Task (TypeScript)",
+            "description": "Creates a new task in the current forge"
+        },
+        "liquid-converter": {
+            "name": "Liquid Converter",
+            "description": "Appends \".liquid\" extension at the selected files."
+        }
     }
-  }
 }

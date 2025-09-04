@@ -6,68 +6,62 @@ const idValidation = z
     .regex(/^[a-zA-Z0-9_-]+$/g, 'Invalid id, allowed characters: (a-z) (A-Z) (0-9) (_) (-).')
 
 const mapper = new VariableMapper({
-    // rename names for ids
-    // add names
     forgeId: {
+        description: 'Forge id of the new forge.',
         parser: z.string('Invalid forge id.')
             .trim()
             .nonempty('Forge id required.')
             .pipe(idValidation)
     },
     forgeName: {
+        description: 'Name of the new forge.',
         parser: z.string('Invalid forge name.')
             .trim()
             .nonempty('Forge name required.')
     },
     forgeDescription: {
+        description: 'Description of the new forge.',
         parser: z.string('Invalid forge description.')
             .default('')
     },
     targetDirectory: {
+        description: 'Target directory where the new forge will be created.',
         parser: z.string('Invalid target directory.')
             .trim()
             .nonempty('Target directory is required.')
             .refine(value => !/[<>:"|?*\x00-\x1F]/.test(value), "Invalid directory.")
     },
     defaultTaskId: {
+        description: 'Default task id.',
         parser: z.string('Invalid default task id.')
             .trim()
             .nonempty('Default task id is required.')
             .pipe(idValidation)
     },
     defaultTaskName: {
+        description: 'Default task name.',
         parser: z.string('Invalid default task name.')
             .trim()
-            .nonempty('Default task name is required.')
+            .optional()
     },
     defaultTaskDescription: {
+        description: 'Default task description.',
         parser: z.string('Invalid default task description.')
             .trim()
-            .nonempty('Default task description is required.')
+            .optional()
     },
     autoInstall: {
+        description: 'Whether to automatically install the forge after its creation.',
         parser: z.coerce.boolean('Invalid variable: autoInstall.')
     },
     rebuildStrategy: {
+        description: 'Rebuild strategy used at forge auto installation.',
         parser: z.literal(Utils.rebuildStrategies, `Invalid rebuild strategy.`)
     }
 })
 
 export default createForge()
     .registerVariables(mapper)
-    .configureCommands(program => {
-        program
-            .option('--forge-name <name>', 'The name of the new forge.')
-            .option('--target-directory <directory>', 'The directory to inject the files.')
-    })
-    .validateOptions((option, value) => {
-        if (option.name() == 'forge-name') {
-            if (!value || value.trim() == '')
-                throw 'Invalid forge name'
-
-            return true
-        }
-    })
     .on('prompt', async hf => {
         await hf.prompts.prompt([
             {
@@ -171,9 +165,7 @@ export default createForge()
         await hf.program.runCommand('npm install', {
             args: [
                 'hyper-forge',
-
-                // fix zod version
-                'zod'
+                'zod@4.0.15'
             ]
         })
 

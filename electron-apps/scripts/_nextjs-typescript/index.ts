@@ -7,22 +7,22 @@ const idValidation = z
 
 const map = new VariableMapper({
     projectName: {
-        parser: z.string('Project name is required.')
+        description: 'Defines the project name.',
+        parser: z.string('Project name is invalid.')
             .trim()
             .nonempty('Project name is required.')
-            .pipe(idValidation)
+            .pipe(idValidation),
     },
     targetDirectory: {
+        description: 'Defines the target directory of the project.',
         parser: z
-            .string('Target directory is required.')
+            .string('Target directory is invalid.')
             .trim()
             .nonempty('Target directory is required.')
             .refine(arg => {
                 return !/[<>:"|?*\x00-\x1F]/.test(arg)
-            }, 'Invalid directory')
+            }, 'Invalid directory'),
     }
-}).withOptions({
-    allowUnmapped: true
 })
 
 const reactComposer = new ForgeComposer({
@@ -38,22 +38,8 @@ const reactComposer = new ForgeComposer({
     }
 })
 
-
 export default createForge()
     .registerVariables(map)
-    .configureCommands(program => {
-        program
-            .option('--project-name <name>', 'The name of the new project.')
-            .option('--target-directory <directory>', 'The directory to inject the files.')
-    })
-    .validateOptions((option, value) => {
-        if (option.name() == 'project-name') {
-            if (!value || value.trim() == '')
-                throw 'Invalid project name'
-
-            return true
-        }
-    })
     .registerComposer(reactComposer)
     .on('prompt', async hf => {
         await hf.prompts.prompt([

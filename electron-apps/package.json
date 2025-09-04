@@ -1,38 +1,42 @@
 {
-  "name": "electron-apps",
-  "description": "Helps building new electron apps",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "clear": "rm -rf dist",
-    "build": "tsc && tsc-alias",
-    "rebuild": "npm run clear && npm run build",
-    "watch": "nodemon --watch scripts --ext * --exec npm run build"
-  },
-  "keywords": [
-    "forge"
-  ],
-  "files": [
-    "dist",
-    "templates"
-  ],
-  "dependencies": {
-    "hyper-forge": "^0.1.3",
-    "zod": "^4.0.15"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "nodemon": "^3.1.9",
-    "tsc-alias": "^1.8.15",
-    "typescript": "^5.8.3"
-  },
-  "forge": {
-    "name": "Electron Apps",
-    "description": "Builds electron apps",
-    "nextjs-typescript": {
-      "name": "NextJs Typescript",
-      "description": "Creates a new Electron app with NextJs Typescript",
-      "default": true
+    "name": "electron-apps",
+    "description": "Helps building new electron apps",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "clear": "rm -rf dist",
+        "build": "tsc && tsc-alias",
+        "rebuild": "npm run clear && npm run build",
+        "watch": "nodemon --watch scripts --ext * --exec npm run build"
+    },
+    "keywords": [
+        "forge"
+    ],
+    "files": [
+        "dist",
+        "templates"
+    ],
+    "dependencies": {
+        "hyper-forge": "^0.2.0",
+        "zod": "^4.0.15"
+    },
+    "devDependencies": {
+        "@types/node": "^22.14.0",
+        "nodemon": "^3.1.9",
+        "tsc-alias": "^1.8.15",
+        "typescript": "^5.8.3"
+    },
+    "forge": {
+        "name": "Electron Apps",
+        "description": "Builds electron apps",
+        "_nextjs-typescript": {
+            "name": "NextJs (TypeScript)",
+            "description": "Creates a new Electron app with NextJs",
+            "default": true
+        },
+        "new-ipc-typescript": {
+            "name": "New Ipc (TypeScript)",
+            "description": "Creates a new ipc handler"
+        }
     }
-  }
 }

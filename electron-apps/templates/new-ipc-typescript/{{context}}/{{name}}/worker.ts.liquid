@@ -1,0 +1,9 @@
+import "reflect-metadata";
+//
+import { ResultObject } from "@shared/common/ResultObject";
+import { container } from 'tsyringe';
+
+export default function(): Promise<ResultObject<any>> {
+    const useCase = container.resolve({{pascalCaseName}}UseCase)
+    return useCase.run()
+}
